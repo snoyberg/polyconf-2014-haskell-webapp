@@ -18,16 +18,16 @@ main = do
     message <- select "#message"
     update  <- select "#update"
     posts   <- select "#posts"
-    h1      <- select "h1"
-    article <- select "article"
+    h1      <- select "#display > h1"
+    article <- select "#display > article"
 
     flip click addPost $ \event -> do
         preventDefault event
         setText "Adding post..." message
         title' <- getVal title
         content' <- getVal content
-        call (AddPost (Title title') (Content content')) $ \(PostId i) -> do
-            setText ("New post: " <> show i) message
+        call (AddPost (Title title') (Content content')) $ \_ -> do
+            setText "New post added" message
             return ()
 
     flip click update $ \event -> do

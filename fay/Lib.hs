@@ -6,9 +6,6 @@ import Fay.FFI
 data JQuery
 data Event
 
-show :: Int -> Text
-show = ffi "%1"
-
 (<>) :: Text -> Text -> Text
 x <> y = fromString (toString x ++ toString y)
 

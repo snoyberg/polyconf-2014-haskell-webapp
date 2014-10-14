@@ -1,14 +1,34 @@
-<div>
-    <input type=text #title placeholder="Enter title here">
-<div>
-    <textarea #content placeholder="Enter content here">
-<div>
-    <button #add-post>Add Post
+<div .row>
+    <div .col-md-2>
+    <div .col-md-8>
+        <div #message .alert .alert-info>Nothing happening yet
+    <div .col-md-2>
 
-<div #message>
+<div .row>
+    <div .col-md-4>
+        <hgroup>
+            <h1>Create posts
 
-<button #update>Update post list
-<ul #posts>
+        <form role=form>
+            <div .form-group>
+                <label for=title>Title
+                <input .form-control type=text #title placeholder="Enter title here">
+            <div .form-group>
+                <label for=content>Content
+                <textarea .form-control #content placeholder="Enter content here">
+            <div .form-group>
+                <button .btn #add-post>Add Post
 
-<h1>
-<article>
+    <div .col-md-4>
+        <hgroup>
+            <h1>List posts
+
+        <button .btn #update>Update post list
+        <ul #posts>
+
+    <div .col-md-4 #display>
+        <hgroup>
+            <h1>Display post
+
+        <h1>
+        <article>

@@ -14,5 +14,6 @@ import Language.Haskell.TH ( Exp(..) )
 getHomeR :: Handler Html
 getHomeR = do
     defaultLayout $ do
+        setTitle "Haskell: Now on the client!"
         $(widgetFile "homepage")
         $(fayFile' (ConE 'StaticR) "Home")
