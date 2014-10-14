@@ -1,5 +1,4 @@
 /static      StaticR  Static  getStatic
-/auth        AuthR    Auth    getAuth
 /fay-command FaySiteR FaySite getFaySite
 
 /favicon.ico FaviconR GET

@@ -37,5 +37,3 @@ getContent pid = do
     ref <- fmap postsRef getYesod
     m <- readIORef ref
     return $ lookup pid m
-
-deriving instance Num PostId

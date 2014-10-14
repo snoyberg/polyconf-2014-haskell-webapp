@@ -16,7 +16,6 @@ library
     exposed-modules: Application
                      Foundation
                      Import
-                     Model
                      Settings
                      Settings.StaticFiles
                      Settings.Development
@@ -49,16 +48,12 @@ library
     build-depends: base                          >= 4          && < 5
                  , yesod                         >= 1.4.0      && < 1.5
                  , yesod-core                    >= 1.4.0      && < 1.5
-                 , yesod-auth                    >= 1.4.0      && < 1.5
                  , yesod-static                  >= 1.4.0      && < 1.5
                  , yesod-form                    >= 1.4.0      && < 1.5
                  , yesod-fay                     >= 0.5.0.1
                  , fay                           >= 0.16
                  , bytestring                    >= 0.9        && < 0.11
                  , text                          >= 0.11       && < 2.0
-                 , persistent                    >= 2.0        && < 2.2
-                 , persistent-postgresql         >= 2.0        && < 2.2
-                 , persistent-template           >= 2.0        && < 2.2
                  , template-haskell
                  , shakespeare                   >= 2.0        && < 2.1
                  , monad-control                 >= 0.3        && < 0.4
@@ -93,21 +88,3 @@ executable         foo
                      , yesod
 
     ghc-options:       -threaded -O2 -rtsopts -with-rtsopts=-N
-
-test-suite test
-    type:              exitcode-stdio-1.0
-    main-is:           main.hs
-    hs-source-dirs:    test
-    ghc-options:       -Wall
-
-    build-depends: base
-                 , foo
-                 , yesod-test >= 1.4 && < 1.5
-                 , yesod-core
-                 , yesod
-                 , persistent
-                 , persistent-postgresql
-                 , resourcet
-                 , monad-logger
-                 , transformers
-                 , hspec

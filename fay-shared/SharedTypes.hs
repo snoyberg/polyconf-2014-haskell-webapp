@@ -6,11 +6,6 @@ module SharedTypes where
 import Prelude
 import Data.Data
 import Language.Fay.Yesod
-#ifdef FAY
-import FFI
-#else
---import Language.Fay.FFI
-#endif
 
 newtype PostId = PostId Int
     deriving (Read, Typeable, Data, Show)
@@ -25,3 +20,8 @@ data Command
     | GetContent PostId (Returns (Maybe (Title, Content)))
     deriving (Read, Typeable, Data, Show)
 
+#ifndef FAY
+deriving instance Eq PostId
+deriving instance Ord PostId
+deriving instance Num PostId
+#endif

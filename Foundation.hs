@@ -2,22 +2,15 @@ module Foundation where
 
 import Prelude
 import Data.IORef (IORef)
-import Data.Text (Text)
-import Data.IntMap (IntMap)
 import Yesod
 import Yesod.Static
-import Yesod.Auth
-import Yesod.Auth.BrowserId
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
 import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
 import qualified Settings
 import Settings.Development (development)
-import qualified Database.Persist
-import Database.Persist.Sql (SqlBackend)
 import Settings.StaticFiles
 import Settings (widgetFile, Extra (..))
-import Model
 import Text.Hamlet (hamletFile)
 import Yesod.Fay
 import Yesod.Core.Types (Logger)
@@ -31,9 +24,7 @@ import qualified Data.Map as Map
 data App = App
     { settings :: AppConfig DefaultEnv Extra
     , getStatic :: Static -- ^ Settings for static file serving.
-    , connPool :: Database.Persist.PersistConfigPool Settings.PersistConf -- ^ Database connection pool.
     , httpManager :: Manager
-    , persistConfig :: Settings.PersistConf
     , fayCommandHandler :: CommandHandler App
     , appLogger :: Logger
     , postsRef :: IORef (Map.Map ST.PostId (ST.Title, ST.Content))
@@ -41,9 +32,6 @@ data App = App
 
 instance HasHttpManager App where
     getHttpManager = httpManager
-
--- Set up i18n messages. See the message folder.
-mkMessage "App" "messages" "en"
 
 -- This is where we define all of the routes in our application. For a full
 -- explanation of the syntax, please see:
@@ -88,16 +76,6 @@ instance Yesod App where
         Just $ uncurry (joinPath y (Settings.staticRoot $ settings y)) $ renderRoute s
     urlRenderOverride _ _ = Nothing
 
-    -- The page to be redirected to when authentication is required.
-    authRoute _ = Just $ AuthR LoginR
-
-    -- Routes not requiring authenitcation.
-    isAuthorized (AuthR _) _ = return Authorized
-    isAuthorized FaviconR _ = return Authorized
-    isAuthorized RobotsR _ = return Authorized
-    -- Default to Authorized for now.
-    isAuthorized _ _ = return Authorized
-
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
     -- expiration dates to be set far in the future without worry of
@@ -129,38 +107,6 @@ instance YesodFay App where
         master <- getYesod
         fayCommandHandler master render command
 
--- How to run database actions.
-instance YesodPersist App where
-    type YesodPersistBackend App = SqlBackend
-    runDB = defaultRunDB persistConfig connPool
-instance YesodPersistRunner App where
-    getDBRunner = defaultGetDBRunner connPool
-
-instance YesodAuth App where
-    type AuthId App = UserId
-
-    -- Where to send a user after successful login
-    loginDest _ = HomeR
-    -- Where to send a user after logout
-    logoutDest _ = HomeR
-
-    getAuthId creds = runDB $ do
-        x <- getBy $ UniqueUser $ credsIdent creds
-        case x of
-            Just (Entity uid _) -> return $ Just uid
-            Nothing -> do
-                fmap Just $ insert User
-                    { userIdent = credsIdent creds
-                    , userPassword = Nothing
-                    }
-
-    -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authBrowserId def]
-
-    authHttpManager = httpManager
-
-instance YesodAuthPersist App
-
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
 instance RenderMessage App FormMessage where
@@ -169,13 +115,3 @@ instance RenderMessage App FormMessage where
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
 getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
-
--- Note: previous versions of the scaffolding included a deliver function to
--- send emails. Unfortunately, there are too many different options for us to
--- give a reasonable default. Instead, the information is available on the
--- wiki:
---
--- https://github.com/yesodweb/yesod/wiki/Sending-email
-
-deriving instance Eq ST.PostId
-deriving instance Ord ST.PostId

@@ -6,8 +6,6 @@ module Application
     ) where
 
 import Import
-import Settings
-import Yesod.Auth
 import Yesod.Default.Config
 import Yesod.Default.Main
 import Yesod.Default.Handlers
@@ -15,14 +13,9 @@ import Network.Wai.Middleware.RequestLogger
     ( mkRequestLogger, outputFormat, OutputFormat (..), IPAddrSource (..), destination
     )
 import qualified Network.Wai.Middleware.RequestLogger as RequestLogger
-import qualified Database.Persist
-import Database.Persist.Sql (runMigration)
-import Network.HTTP.Client.Conduit (newManager)
 import Yesod.Fay (getFaySite)
-import Control.Monad.Logger (runLoggingT)
 import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize)
 import Network.Wai.Logger (clockDateCacher)
-import Data.Default (def)
 import Yesod.Core.Types (loggerSet, Logger (Logger))
 
 -- Import all relevant handler modules here.
@@ -63,10 +56,6 @@ makeFoundation :: AppConfig DefaultEnv Extra -> IO App
 makeFoundation conf = do
     manager <- newManager
     s <- staticSite
-    dbconf <- withYamlEnvironment "config/postgresql.yml" (appEnv conf)
-              Database.Persist.loadConfig >>=
-              Database.Persist.applyEnv
-    p <- Database.Persist.createPoolConfig (dbconf :: Settings.PersistConf)
 
     loggerSet' <- newStdoutLoggerSet defaultBufSize
     (getter, _) <- clockDateCacher
@@ -76,18 +65,11 @@ makeFoundation conf = do
         foundation = App
             { settings = conf
             , getStatic = s
-            , connPool = p
             , httpManager = manager
-            , persistConfig = dbconf
             , fayCommandHandler = onCommand
             , appLogger = logger
             , postsRef = postsRef'
             }
-
-    -- Perform database migration using our application's logging settings.
-    runLoggingT
-        (Database.Persist.runPool dbconf (runMigration migrateAll) p)
-        (messageLoggerSource foundation logger)
 
     return foundation
 
