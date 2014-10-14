@@ -19,14 +19,13 @@
             <div .form-group>
                 <button .btn #add-post>Add Post
 
-    <div .col-md-4>
         <hgroup>
             <h1>List posts
 
         <button .btn #update>Update post list
         <ul #posts>
 
-    <div .col-md-4 #display>
+    <div .col-md-8 #display>
         <hgroup>
             <h1>Display post
 
