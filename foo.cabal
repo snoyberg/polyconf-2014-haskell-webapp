@@ -1,0 +1,113 @@
+name:              foo
+version:           0.0.0
+cabal-version:     >= 1.8
+build-type:        Simple
+
+Flag dev
+    Description:   Turn on development settings, like auto-reload templates.
+    Default:       False
+
+Flag library-only
+    Description:   Build for use with "yesod devel"
+    Default:       False
+
+library
+    hs-source-dirs: ., fay-shared
+    exposed-modules: Application
+                     Foundation
+                     Import
+                     Model
+                     Settings
+                     Settings.StaticFiles
+                     Settings.Development
+                     SharedTypes
+                     Handler.Fay
+                     Handler.Home
+
+    if flag(dev) || flag(library-only)
+        cpp-options:   -DDEVELOPMENT
+        ghc-options:   -Wall -O0
+    else
+        ghc-options:   -Wall -O2
+
+    extensions: TemplateHaskell
+                QuasiQuotes
+                OverloadedStrings
+                NoImplicitPrelude
+                CPP
+                MultiParamTypeClasses
+                TypeFamilies
+                GADTs
+                GeneralizedNewtypeDeriving
+                FlexibleContexts
+                EmptyDataDecls
+                NoMonomorphismRestriction
+                RankNTypes
+                DeriveDataTypeable
+                StandaloneDeriving
+
+    build-depends: base                          >= 4          && < 5
+                 , yesod                         >= 1.4.0      && < 1.5
+                 , yesod-core                    >= 1.4.0      && < 1.5
+                 , yesod-auth                    >= 1.4.0      && < 1.5
+                 , yesod-static                  >= 1.4.0      && < 1.5
+                 , yesod-form                    >= 1.4.0      && < 1.5
+                 , yesod-fay                     >= 0.5.0.1
+                 , fay                           >= 0.16
+                 , bytestring                    >= 0.9        && < 0.11
+                 , text                          >= 0.11       && < 2.0
+                 , persistent                    >= 2.0        && < 2.2
+                 , persistent-postgresql         >= 2.0        && < 2.2
+                 , persistent-template           >= 2.0        && < 2.2
+                 , template-haskell
+                 , shakespeare                   >= 2.0        && < 2.1
+                 , monad-control                 >= 0.3        && < 0.4
+                 , wai-extra                     >= 3.0        && < 3.1
+                 , yaml                          >= 0.8        && < 0.9
+                 , http-conduit                  >= 2.1        && < 2.2
+                 , directory                     >= 1.1        && < 1.3
+                 , warp                          >= 3.0        && < 3.1
+                 , data-default
+                 , aeson                         >= 0.6        && < 0.9
+                 , conduit                       >= 1.0        && < 2.0
+                 , monad-logger                  >= 0.3        && < 0.4
+                 , fast-logger                   >= 2.2        && < 2.3
+                 , wai-logger                    >= 2.2        && < 2.3
+                 , containers
+                 , lifted-base
+                 , classy-prelude-yesod
+                 , fay-text
+
+    -- see https://github.com/yesodweb/yesod/issues/814
+    if !os(windows)
+        build-depends: unix
+
+executable         foo
+    if flag(library-only)
+        Buildable: False
+
+    main-is:           main.hs
+    hs-source-dirs:    app
+    build-depends:     base
+                     , foo
+                     , yesod
+
+    ghc-options:       -threaded -O2 -rtsopts -with-rtsopts=-N
+
+test-suite test
+    type:              exitcode-stdio-1.0
+    main-is:           main.hs
+    hs-source-dirs:    test
+    ghc-options:       -Wall
+
+    build-depends: base
+                 , foo
+                 , yesod-test >= 1.4 && < 1.5
+                 , yesod-core
+                 , yesod
+                 , persistent
+                 , persistent-postgresql
+                 , resourcet
+                 , monad-logger
+                 , transformers
+                 , hspec

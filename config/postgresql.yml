@@ -1,0 +1,33 @@
+# NOTE: These settings can be overridden by environment variables as well, in
+# particular:
+#
+#    PGHOST
+#    PGPORT
+#    PGUSER
+#    PGPASS
+#    PGDATABASE
+
+Default: &defaults
+  user: foo
+  password: foo
+  host: localhost
+  port: 5432
+  database: foo
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: foo_test
+  <<: *defaults
+
+Staging:
+  database: foo_staging
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: foo_production
+  poolsize: 100
+  <<: *defaults

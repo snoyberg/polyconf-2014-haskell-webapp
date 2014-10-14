@@ -1,0 +1,14 @@
+<div>
+    <input type=text #title placeholder="Enter title here">
+<div>
+    <textarea #content placeholder="Enter content here">
+<div>
+    <button #add-post>Add Post
+
+<div #message>
+
+<button #update>Update post list
+<ul #posts>
+
+<h1>
+<article>
