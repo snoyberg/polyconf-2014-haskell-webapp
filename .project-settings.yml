@@ -1,0 +1,26 @@
+binary-ghc-args:
+- -O
+- -threaded
+module-template: ! 'module MODULE_NAME where
+
+'
+extensions:
+  TemplateHaskell: true
+  OverloadedStrings: true
+  ImplicitPrelude: false
+  QuasiQuotes: true
+  TypeFamilies: true
+  RankNTypes: true
+  CPP: true
+  MultiParamTypeClasses: true
+  StandaloneDeriving: true
+environment: ghc-7.8-stable-14.09
+auto-hidden: []
+cabal-file: project.cabal
+version: 1
+extra-packages: ''
+ghc-args: []
+excluded-modules:
+- app/DevelMain.hs
+- fay/Home.hs
+- fay/Lib.hs
