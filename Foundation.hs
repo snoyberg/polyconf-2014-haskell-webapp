@@ -56,7 +56,6 @@ instance Yesod App where
         "config/client_session_key.aes"
 
     defaultLayout widget = do
-        master <- getYesod
         mmsg <- getMessage
 
         -- We break up the default layout into two components:
