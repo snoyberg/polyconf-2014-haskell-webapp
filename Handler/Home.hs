@@ -2,7 +2,7 @@
 module Handler.Home where
 
 import Import
-import Language.Haskell.TH ( Exp(..) )
+import Yesod.Form.Jquery
 
 -- This is a handler function for the GET request method on the HomeR
 -- resource pattern. All of your resource patterns are defined in
@@ -13,7 +13,9 @@ import Language.Haskell.TH ( Exp(..) )
 -- inclined, or create a single monolithic file.
 getHomeR :: Handler Html
 getHomeR = do
+    master <- getYesod
     defaultLayout $ do
         setTitle "Haskell: Now on the client!"
         $(widgetFile "homepage")
-        $(fayFile' (ConE 'StaticR) "Home")
+        addScriptEither $ urlJqueryJs master
+        addScript $ StaticR _Home_jsexe_all_js

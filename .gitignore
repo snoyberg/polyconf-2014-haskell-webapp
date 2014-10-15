@@ -15,3 +15,6 @@ cabal.sandbox.config
 *.swp
 static/fay-runtime.js
 static/faygen-*.js
+*.js_hi
+*.js_o
+*.jsexe

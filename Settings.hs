@@ -16,8 +16,6 @@ import Control.Applicative
 import Settings.Development
 import Data.Default (def)
 import Text.Hamlet
-import Yesod.Fay
-import qualified Fay
 
 -- Static setting below. Changing these requires a recompile
 
@@ -62,24 +60,6 @@ widgetFile :: String -> Q Exp
 widgetFile = (if development then widgetFileReload
                              else widgetFileNoReload)
               widgetFileSettings
-
-fayFile' :: Exp -> FayFile
-fayFile' staticR moduleName
-    | development = fayFileReloadWithConfig 'fayConfigModifier settings
-    | otherwise   = fayFileProdWithConfig fayConfigModifier settings
-  where
-    settings = (yesodFaySettings moduleName)
-        { yfsSeparateRuntime = Just ("static", staticR)
-        -- , yfsPostProcess = readProcess "java" ["-jar", "closure-compiler.jar"]
-        , yfsExternal = Just ("static", staticR)
-        , yfsPackages = ["fay-base"]
-        , yfsTypecheckDevel = True
-        }
-
-fayConfigModifier :: Fay.Config -> Fay.Config
-fayConfigModifier config = config
-    { Fay.configOptimizeNewtypes = False
-    }
 
 data Extra = Extra
     { extraCopyright :: Text

@@ -13,7 +13,6 @@ import Network.Wai.Middleware.RequestLogger
     ( mkRequestLogger, outputFormat, OutputFormat (..), IPAddrSource (..), destination
     )
 import qualified Network.Wai.Middleware.RequestLogger as RequestLogger
-import Yesod.Fay (getFaySite)
 import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize)
 import Network.Wai.Logger (clockDateCacher)
 import Yesod.Core.Types (loggerSet, Logger (Logger))
@@ -66,7 +65,6 @@ makeFoundation conf = do
             { settings = conf
             , getStatic = s
             , httpManager = manager
-            , fayCommandHandler = onCommand
             , appLogger = logger
             , postsRef = postsRef'
             }

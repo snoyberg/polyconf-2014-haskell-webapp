@@ -1,19 +1,22 @@
 module Handler.Fay where
 
 import Import hiding (Content)
-import Yesod.Fay
-import Fay.Convert (readFromFay')
 import SharedTypes
 import qualified Data.Map as Map
+import Data.Aeson (eitherDecodeStrict')
 
-onCommand :: CommandHandler App
-onCommand render command = do
-    $logDebug $ tshow command
-    case readFromFay' command of
-      Right (AddPost x y r)  -> addPost x y  >>= render r
-      Right (GetPosts r)     -> getPosts     >>= render r
-      Right (GetContent p r) -> getContent p >>= render r
-      Left e                 -> invalidArgs ["Invalid command: " ++ pack e]
+postCommandR :: Handler Value
+postCommandR = do
+    mtext <- lookupPostParam "json"
+    bs <- maybe (invalidArgs ["json not provided"]) (return . encodeUtf8) mtext
+    command <- either (invalidArgs . return . pack) return
+             $ eitherDecodeStrict' bs
+    let render :: ToJSON a => Returns a -> a -> Handler Value
+        render Returns x = returnJson x
+    case command of
+      AddPost x y r  -> addPost x y  >>= render r
+      GetPosts r     -> getPosts     >>= render r
+      GetContent p r -> getContent p >>= render r
 
 addPost :: Title -> Content -> Handler PostId
 addPost t c = do

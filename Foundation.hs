@@ -12,10 +12,10 @@ import Settings.Development (development)
 import Settings.StaticFiles
 import Settings (widgetFile, Extra (..))
 import Text.Hamlet (hamletFile)
-import Yesod.Fay
 import Yesod.Core.Types (Logger)
 import qualified SharedTypes as ST
 import qualified Data.Map as Map
+import Yesod.Form.Jquery
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -25,7 +25,6 @@ data App = App
     { settings :: AppConfig DefaultEnv Extra
     , getStatic :: Static -- ^ Settings for static file serving.
     , httpManager :: Manager
-    , fayCommandHandler :: CommandHandler App
     , appLogger :: Logger
     , postsRef :: IORef (Map.Map ST.PostId (ST.Title, ST.Content))
     }
@@ -98,13 +97,6 @@ instance Yesod App where
     makeLogger = return . appLogger
 
 instance YesodJquery App
-instance YesodFay App where
-
-    fayRoute = FaySiteR
-
-    yesodFayCommand render command = do
-        master <- getYesod
-        fayCommandHandler master render command
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
