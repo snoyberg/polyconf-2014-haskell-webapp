@@ -9,9 +9,9 @@ import Language.Fay.Yesod
 
 newtype PostId = PostId Int
     deriving (Read, Typeable, Data, Show)
-data Title = Title Text
+newtype Title = Title Text
     deriving (Read, Typeable, Data, Show)
-data Content = Content Text
+newtype Content = Content Text
     deriving (Read, Typeable, Data, Show)
 
 data Command
