@@ -3,12 +3,14 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE TemplateHaskell #-}
 module SharedTypes where
 
 import Prelude
 import Data.Data
 import Data.Text (Text)
 import Data.Aeson
+import Data.Aeson.TH
 import GHC.Generics (Generic)
 
 newtype PostId = PostId Int
@@ -27,7 +29,11 @@ data Command
     = AddPost Title Content (Returns PostId)
     | GetPosts (Returns [(PostId, Title)])
     | GetContent PostId (Returns (Maybe (Title, Content)))
+    {-
     deriving (Generic)
 
 instance ToJSON Command
 instance FromJSON Command
+-}
+
+deriveJSON defaultOptions ''Command
