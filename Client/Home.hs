@@ -27,6 +27,8 @@ call mkCmd = do
     cmdText = TL.toStrict $ toLazyText $ encodeToTextBuilder $ toJSON cmd
     params = [("json", cmdText)]
     settings = def
+        { asMethod = POST
+        }
 
 click' j f = click f def { hsPreventDefault = True } j
 
