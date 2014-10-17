@@ -22,6 +22,8 @@ getHomeR = defaultLayout $ do
                 <a href=@{DebounceR}>Debouncing
             <li>
                 <a href=@{RaceR}>Race
+            <li>
+                <a href=@{STMR}>Software transactional memory
     |]
 
 getTypeSafeCommR :: Handler Html
@@ -50,3 +52,12 @@ getRaceR = do
         $(widgetFile "race")
         addScriptEither $ urlJqueryJs master
         addScript $ StaticR _Race_jsexe_all_js
+
+getSTMR :: Handler Html
+getSTMR = do
+    master <- getYesod
+    defaultLayout $ do
+        setTitle "Software Transactional Memory"
+        $(widgetFile "stm")
+        addScriptEither $ urlJqueryJs master
+        addScript $ StaticR _STM_jsexe_all_js

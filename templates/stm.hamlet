@@ -1,0 +1,10 @@
+<div .row>
+    <div .col-md-12>
+        <p>
+            Current Alice balance:
+            <span #alice>
+        <p>
+            Current Bob balance:
+            <span #bob>
+
+        <button .btn #give>Give Bob $5

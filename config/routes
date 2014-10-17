@@ -8,3 +8,4 @@
 /type-safe-comm TypeSafeCommR GET
 /debounce DebounceR GET
 /race RaceR GET
+/stm STMR GET
