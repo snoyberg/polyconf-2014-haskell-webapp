@@ -48,7 +48,7 @@ main = do
         case decimal indexT of
             Right (indexI, "") -> do
                 setText "Starting the race" result
-                res <- race (threadDelay 1000000 >> expensiveComputation indexI)
+                res <- race (expensiveComputation indexI)
                      $ call (ExpensiveComputation indexI)
                 setText (pack $ show res) result
             _ -> setText "Invalid input" result
