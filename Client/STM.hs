@@ -12,7 +12,7 @@ import qualified Data.Text.Lazy as TL
 import Data.Text.Lazy.Builder (toLazyText)
 import Data.Aeson (FromJSON, toJSON, eitherDecodeStrict')
 import Data.Text.Encoding (encodeUtf8)
-import Control.Concurrent.Async (race, async)
+import Control.Concurrent.Async (race, async, concurrently)
 import Control.Concurrent (threadDelay)
 import Data.Text (pack)
 import Data.Text.Read (decimal)
@@ -23,20 +23,25 @@ main = do
     aliceVar <- newTVarIO 100
     bobVar   <- newTVarIO 100
 
-    async $ displayBalance aliceVar bobVar
-
     button <- select "#give"
-    let give = atomically $ do
-            alice <- readTVar aliceVar
-            when (alice >= 5) $ do
-                writeTVar aliceVar (alice - 5)
-                modifyTVar bobVar (+ 5)
-    click (const give) def button
+    click (const $ giveBob aliceVar bobVar) def button
 
-    async $ forever $ do
-        threadDelay 5000000
-        atomically $ modifyTVar aliceVar (+ 10)
+    concurrently
+        (payAlice aliceVar)
+        (displayBalance aliceVar bobVar)
     return ()
+
+payAlice :: TVar Int -> IO ()
+payAlice aliceVar = forever $ do
+    threadDelay 5000000
+    atomically $ modifyTVar aliceVar (+ 10)
+
+giveBob :: TVar Int -> TVar Int -> IO ()
+giveBob aliceVar bobVar = atomically $ do
+    alice <- readTVar aliceVar
+    when (alice >= 5) $ do
+        writeTVar aliceVar (alice - 5)
+        modifyTVar bobVar (+ 5)
 
 displayBalance :: TVar Int -> TVar Int -> IO ()
 displayBalance aliceVar bobVar = do
