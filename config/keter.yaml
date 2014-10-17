@@ -16,4 +16,3 @@ stanzas:
       # to. The primary hostname will be used for generating your application
       # root.
       - polyconf.fpcenter.io
-      - polyconf.snoyman.com
