@@ -1,0 +1,5 @@
+<div .row>
+    <div .col-md-12>
+        Index: <input type=number value=1000 id=index>
+        <button .btn>Start the race
+        <div #result>

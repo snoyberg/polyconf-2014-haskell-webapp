@@ -17,6 +17,7 @@ postCommandR = do
       AddPost x y r  -> addPost x y  >>= render r
       GetPosts r     -> getPosts     >>= render r
       GetContent p r -> getContent p >>= render r
+      ExpensiveComputation i r -> liftIO (expensiveComputation i) >>= render r
 
 addPost :: Title -> Content -> Handler PostId
 addPost t c = do

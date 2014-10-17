@@ -20,6 +20,8 @@ getHomeR = defaultLayout $ do
                 <a href=@{TypeSafeCommR}>Type safe communications
             <li>
                 <a href=@{DebounceR}>Debouncing
+            <li>
+                <a href=@{RaceR}>Race
     |]
 
 getTypeSafeCommR :: Handler Html
@@ -39,3 +41,12 @@ getDebounceR = do
         $(widgetFile "debounce")
         addScriptEither $ urlJqueryJs master
         addScript $ StaticR _Debounce_jsexe_all_js
+
+getRaceR :: Handler Html
+getRaceR = do
+    master <- getYesod
+    defaultLayout $ do
+        setTitle "Race"
+        $(widgetFile "race")
+        addScriptEither $ urlJqueryJs master
+        addScript $ StaticR _Race_jsexe_all_js

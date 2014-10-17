@@ -29,6 +29,7 @@ data Command
     = AddPost Title Content (Returns PostId)
     | GetPosts (Returns [(PostId, Title)])
     | GetContent PostId (Returns (Maybe (Title, Content)))
+    | ExpensiveComputation Int (Returns Integer)
     {-
     deriving (Generic)
 
@@ -37,3 +38,9 @@ instance FromJSON Command
 -}
 
 deriveJSON defaultOptions ''Command
+
+expensiveComputation :: Int -> IO Integer
+expensiveComputation i = return $ fibs !! i
+
+fibs :: [Integer]
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
