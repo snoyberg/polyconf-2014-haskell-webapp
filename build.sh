@@ -1,3 +1,6 @@
 #!/bin/bash -ex
-ghcjs Client/Home.hs
-cp -r Client/Home.jsexe static
+for f in Client/*.hs
+do
+    ghcjs $f
+    cp -r ${f%.hs}.jsexe static
+done

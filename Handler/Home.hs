@@ -12,10 +12,30 @@ import Yesod.Form.Jquery
 -- functions. You can spread them across multiple files if you are so
 -- inclined, or create a single monolithic file.
 getHomeR :: Handler Html
-getHomeR = do
+getHomeR = defaultLayout $ do
+    setTitle "PolyConf 2014- GHCJS demos"
+    [whamlet|
+        <ul>
+            <li>
+                <a href=@{TypeSafeCommR}>Type safe communications
+            <li>
+                <a href=@{DebounceR}>Debouncing
+    |]
+
+getTypeSafeCommR :: Handler Html
+getTypeSafeCommR = do
     master <- getYesod
     defaultLayout $ do
         setTitle "Haskell: Now on the client!"
-        $(widgetFile "homepage")
+        $(widgetFile "type-safe-comm")
         addScriptEither $ urlJqueryJs master
         addScript $ StaticR _Home_jsexe_all_js
+
+getDebounceR :: Handler Html
+getDebounceR = do
+    master <- getYesod
+    defaultLayout $ do
+        setTitle "Debounce"
+        $(widgetFile "debounce")
+        addScriptEither $ urlJqueryJs master
+        addScript $ StaticR _Debounce_jsexe_all_js

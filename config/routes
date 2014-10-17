@@ -5,3 +5,5 @@
 /robots.txt RobotsR GET
 
 / HomeR GET
+/type-safe-comm TypeSafeCommR GET
+/debounce DebounceR GET
