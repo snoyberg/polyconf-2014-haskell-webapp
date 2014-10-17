@@ -13,7 +13,7 @@ getVal :: JQuery -> Fay Text
 getVal = ffi "%1['val']()"
 
 select :: Text -> Fay JQuery
-select = ffi "jQuery(Fay$$_(%1))"
+select = ffi "jQuery(%1)"
 
 click :: (Event -> Fay ()) -> JQuery -> Fay JQuery
 click = ffi "%2['click'](%1)"
