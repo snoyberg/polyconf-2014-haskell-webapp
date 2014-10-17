@@ -46,13 +46,7 @@ type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
 -- Please see the documentation for the Yesod typeclass. There are a number
 -- of settings which can be configured by overriding methods here.
 instance Yesod App where
-    approot = ApprootMaster $ appRoot . settings
-
-    -- Store session data on the client in encrypted cookies,
-    -- default session idle timeout is 120 minutes
-    makeSessionBackend _ = fmap Just $ defaultClientSessionBackend
-        120    -- timeout in minutes
-        "config/client_session_key.aes"
+    makeSessionBackend _ = return Nothing
 
     defaultLayout widget = do
         mmsg <- getMessage
@@ -67,27 +61,6 @@ instance Yesod App where
             addStylesheet $ StaticR css_bootstrap_css
             $(widgetFile "default-layout")
         withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
-
-    -- This is done to provide an optimization for serving static files from
-    -- a separate domain. Please see the staticRoot setting in Settings.hs
-    urlRenderOverride y (StaticR s) =
-        Just $ uncurry (joinPath y (Settings.staticRoot $ settings y)) $ renderRoute s
-    urlRenderOverride _ _ = Nothing
-
-    -- This function creates static content files in the static folder
-    -- and names them based on a hash of their content. This allows
-    -- expiration dates to be set far in the future without worry of
-    -- users receiving stale content.
-    addStaticContent =
-        addStaticContentExternal Right genFileName Settings.staticDir (StaticR . flip StaticRoute [])
-      where
-        -- Generate a unique filename based on the content itself
-        genFileName lbs
-            | development = "autogen-" ++ base64md5 lbs
-            | otherwise   = base64md5 lbs
-
-    -- Place Javascript at bottom of the body tag so the rest of the page loads first
-    jsLoader _ = BottomOfBody
 
     -- What messages should be logged. The following includes all messages when
     -- in development, and warnings and errors in production.
