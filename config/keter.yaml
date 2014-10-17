@@ -1,0 +1,19 @@
+stanzas:
+
+  # Your Yesod application.
+  - type: webapp
+
+    # Name of your executable. You are unlikely to need to change this.
+    # Note that all file paths are relative to the keter.yml file.
+    exec: ../dist/build/foo/foo
+
+    # Command line options passed to your application.
+    args:
+      - production
+
+    hosts:
+      # You can specify one or more hostnames for your application to respond
+      # to. The primary hostname will be used for generating your application
+      # root.
+      - polyconf.fpcenter.io
+      - polyconf.snoyman.com
